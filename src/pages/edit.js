@@ -11,10 +11,11 @@ const Edit = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/api/student/update/${id}`)
+      .get(`http://localhost:8000/api/student/show/${id}`)
       .then((res) => {
-        console.log(res);
-        setStudent(res.data.students);
+        const siswa = res.data.data
+        console.log(siswa);
+        setStudent(siswa);
         // setLoading(false);
       })
       .catch(function (error) {
@@ -95,6 +96,7 @@ const Edit = () => {
 
             <div className="card-body">
               <form onSubmit={updateStudent}>
+                {/* ======== nama ======== */}
                 <div className="mb-3">
                   <label>Name</label>
                   <input
@@ -106,6 +108,8 @@ const Edit = () => {
                   />
                   <span className="text-danger">{inputErrorList.name}</span>
                 </div>
+
+                {/* ======== alamat ======== */}
                 <div className="mb-3">
                   <label>Address</label>
                   <input
@@ -117,6 +121,8 @@ const Edit = () => {
                   />
                   <span className="text-danger">{inputErrorList.address}</span>
                 </div>
+                
+                {/* ======== email ======== */}
                 <div className="mb-3">
                   <label>Email</label>
                   <input

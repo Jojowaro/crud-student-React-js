@@ -28,7 +28,7 @@ const Add = () => {
     };
 
     axios
-      .post("http://localhost:8000/api/student", data)
+      .post("http://localhost:8000/api/student/store", data)
       .then((res) => {
         alert(res.data.message);
         navigate("/");
