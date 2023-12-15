@@ -9,7 +9,7 @@ const Home = () => {
     axios
       .get(`http://localhost:8000/api/student`)
       .then((res) => {
-        const siswa = res.data.data
+        const siswa = res.data.student
         console.log(siswa);
         setStudents(siswa);
       })
@@ -52,8 +52,8 @@ const Home = () => {
       return (
         <tr key={index}>
           <td>{student.id}</td>
-          <td>{student.nama}</td>
-          <td>{student.alamat}</td>
+          <td>{student.name}</td>
+          <td>{student.address}</td>
           <td>{student.email}</td>
           <td>
             <Link to={`/edit/${student.id}`} className="btn btn-success">
@@ -100,8 +100,8 @@ const Home = () => {
                 <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Nama</th>
-                    <th>Alamat</th>
+                    <th>navigateame</th>
+                    <th>Address</th>
                     <th>Email</th>
                     <th>Edit</th>
                     <th>Delete</th>

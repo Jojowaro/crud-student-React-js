@@ -28,15 +28,15 @@ const Add = () => {
     };
 
     axios
-      .post("http://localhost:8000/api/student/store", data)
+      .post("http://localhost:8000/api/student", data)
       .then((res) => {
-        alert(res.data.message);
+        alert(res.data.students);
         navigate("/");
         // setLoading(false);
       })
       .catch(function (error) {
         if (error.response) {
-          if (error.response.status === 400) {
+          if (error.response.status === 422) {
             setInputErrorList(error.response.data.errors);
             // setLoading(false);
           }
@@ -50,7 +50,7 @@ const Add = () => {
 
 
   return (
-    <div className="container mb-5">
+    <div className="container mt-5">
       <div className="row">
         <div className="col-md-12">
           <div className="card">
@@ -81,7 +81,7 @@ const Add = () => {
                   <input
                     type="text"
                     name="address"
-                    value={student.adress}
+                    value={student.address}
                     onChange={handleInput}
                     className="form-control"
                   />

@@ -1,32 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Edit = () => {
   let { id } = useParams();
 
-  // const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const [inputErrorList, setInputErrorList] = useState({});
-  const [student, setStudent] = useState({});
+  const [student, setStudent] = useState({ name: "", address: "", email: "" });
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/api/student/show/${id}`)
+      .get(`http://localhost:8000/api/student/update/${id}`)
       .then((res) => {
-        const siswa = res.data.data
+        const siswa = res.data.students;
         console.log(siswa);
         setStudent(siswa);
-        // setLoading(false);
       })
       .catch(function (error) {
         if (error.response) {
           if (error.response.status === 404) {
-            alert(error.response.data.errors);
-            // setLoading(false);
+            alert(error.response.data.message);
           }
           if (error.response.status === 500) {
-            alert(error.response.data);
-            // setLoading(false);
+            alert(error.response.data.message);
           }
         }
       });
@@ -40,7 +37,6 @@ const Edit = () => {
   const updateStudent = (e) => {
     e.preventDefault();
 
-    // setLoading(true);
     const data = {
       name: student.name,
       address: student.address,
@@ -48,31 +44,27 @@ const Edit = () => {
     };
 
     axios
-      .post(`http://localhost:8000/api/student/update/${id}`, data)
+      .put(`http://localhost:8000/api/student/update/${id}`, data)
       .then((res) => {
-        alert(res.data.message);
-        // setLoading(false);
+        alert(res.data.students);
+        navigate("/");
       })
       .catch(function (error) {
         if (error.response) {
-          if (error.response.status === 400) {
+          if (error.response.status === 422) {
             setInputErrorList(error.response.data.errors);
-            // setLoading(false);
           }
           if (error.response.status === 404) {
-            alert(error.response.data.errors);
-            // setLoading(false);
+            alert(error.response.data.message);
           }
           if (error.response.status === 500) {
-            alert(error.response.data);
-            // setLoading(false);
+            alert(error.response.data.message);
           }
         }
       });
   };
 
-
-  if (Object.keys(student).length === 0) {
+  if (!student || Object.keys(student).length === 0) {
     return (
       <div className="container">
         <h4>Tidak ada siswa yang ditemukan</h4>
@@ -81,7 +73,7 @@ const Edit = () => {
   }
 
   return (
-    <div className="container mb-5">
+    <div className="container mt-5">
       <div className="row">
         <div className="col-md-12">
           <div className="card">
@@ -96,7 +88,6 @@ const Edit = () => {
 
             <div className="card-body">
               <form onSubmit={updateStudent}>
-                {/* ======== nama ======== */}
                 <div className="mb-3">
                   <label>Name</label>
                   <input
@@ -109,20 +100,18 @@ const Edit = () => {
                   <span className="text-danger">{inputErrorList.name}</span>
                 </div>
 
-                {/* ======== alamat ======== */}
                 <div className="mb-3">
                   <label>Address</label>
                   <input
                     type="text"
                     name="address"
-                    value={student.adress}
+                    value={student.address}
                     onChange={handleInput}
                     className="form-control"
                   />
                   <span className="text-danger">{inputErrorList.address}</span>
                 </div>
-                
-                {/* ======== email ======== */}
+
                 <div className="mb-3">
                   <label>Email</label>
                   <input
@@ -134,6 +123,7 @@ const Edit = () => {
                   />
                   <span className="text-danger">{inputErrorList.email}</span>
                 </div>
+
                 <div className="mb-3">
                   <button type="submit" className="btn btn-primary">
                     Save Students
