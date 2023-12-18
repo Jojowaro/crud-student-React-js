@@ -1,48 +1,44 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 
-const Add = () => {
-  const navigate = useNavigate();
-  const [inputErrorList, setInputErrorList] = useState({});
-  const [student, setStudent] = useState({
-    name: "",
-    address: "",
-    email: "",
-  });
+const Edit = () => {
+  let { id } = useParams();
+  const [student, setStudent] = useState({ name: "", address: "", email: "" });
 
-  const handleInput = (e) => {
-    e.persist();
-    setStudent({ ...student, [e.target.name]: e.target.value });
-  };
-
-  const saveStudent = (e) => {
-    e.preventDefault();
-
-    const data = {
-      name: student.name,
-      address: student.address,
-      email: student.email,
-    };
-
+  useEffect(() => {
     axios
-      .post("http://localhost:8000/api/student/store", data)
+      .get(`http://localhost:8000/api/student/show/${id}`)
       .then((res) => {
-        alert(res.data.students);
-        navigate("/");
+        const siswa = res.data.data;
+        console.log(siswa);
+        setStudent(siswa);
       })
       .catch(function (error) {
         if (error.response) {
-          if (error.response.status === 422) {
-            setInputErrorList(error.response.data.errors);
-          }
-          if (error.response.status === 500) {
-            alert(error.response.data);
+          if (error.response.status === 400) {
+            alert(error.response.data.message);
           }
         }
       });
+  }, [id]);
+
+//   const handleInput = (e) => {
+//     e.persist();
+//     setStudent({ ...student, [e.target.name]: e.target.value });
+//   };
+
+  const showStudent = (e) => {
+    e.preventDefault();
   };
 
+  if (!student || Object.keys(student).length === 0) {
+    return (
+      <div className="container">
+        <h4>Tidak ada siswa yang ditemukan</h4>
+      </div>
+    );
+  }
 
   return (
     <div className="container mt-5">
@@ -51,7 +47,7 @@ const Add = () => {
           <div className="card">
             <div className="card-header">
               <h4>
-                Add Student
+                Edit Student
                 <Link to="/" className="btn btn-primary float-end">
                   Back
                 </Link>
@@ -59,44 +55,38 @@ const Add = () => {
             </div>
 
             <div className="card-body">
-              <form onSubmit={saveStudent}>
+              <form onSubmit={showStudent}>
                 <div className="mb-3">
                   <label>Name</label>
                   <input
                     type="text"
                     name="name"
                     value={student.name}
-                    onChange={handleInput}
+                    readOnly
                     className="form-control"
                   />
-                  <span className="text-danger">{inputErrorList.name}</span>
                 </div>
+
                 <div className="mb-3">
                   <label>Address</label>
                   <input
                     type="text"
                     name="address"
                     value={student.address}
-                    onChange={handleInput}
+                    readOnly
                     className="form-control"
                   />
-                  <span className="text-danger">{inputErrorList.address}</span>
                 </div>
+
                 <div className="mb-3">
                   <label>Email</label>
                   <input
                     type="text"
                     name="email"
                     value={student.email}
-                    onChange={handleInput}
+                    readOnly
                     className="form-control"
                   />
-                  <span className="text-danger">{inputErrorList.email}</span>
-                </div>
-                <div className="mb-3">
-                  <button type="submit" className="btn btn-primary">
-                    Save Students
-                  </button>
                 </div>
               </form>
             </div>
@@ -107,4 +97,4 @@ const Add = () => {
   );
 };
 
-export default Add;
+export default Edit;

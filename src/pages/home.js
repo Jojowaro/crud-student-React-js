@@ -5,11 +5,12 @@ import axios from "axios";
 const Home = () => {
   const [students, setStudents] = useState([]);
 
+  // ======== get student ========
   useEffect(() => {
     axios
       .get(`http://localhost:8000/api/student`)
       .then((res) => {
-        const siswa = res.data.student
+        const siswa = res.data.data
         console.log(siswa);
         setStudents(siswa);
       })
@@ -69,6 +70,11 @@ const Home = () => {
               Delete
             </button>
           </td>
+          <td>
+            <Link to={`/show/${student.id}`} className="btn btn-primary">
+              Show
+            </Link>
+          </td>
         </tr>
       );
     });
@@ -100,11 +106,12 @@ const Home = () => {
                 <thead>
                   <tr>
                     <th>ID</th>
-                    <th>navigateame</th>
+                    <th>Name</th>
                     <th>Address</th>
                     <th>Email</th>
                     <th>Edit</th>
                     <th>Delete</th>
+                    <th>Show</th>
                   </tr>
                 </thead>
                 <tbody>

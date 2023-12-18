@@ -11,7 +11,7 @@ const Edit = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/api/student/update/${id}`)
+      .get(`http://localhost:8000/api/student/edit/${id}`)
       .then((res) => {
         const siswa = res.data.students;
         console.log(siswa);
@@ -20,9 +20,6 @@ const Edit = () => {
       .catch(function (error) {
         if (error.response) {
           if (error.response.status === 404) {
-            alert(error.response.data.message);
-          }
-          if (error.response.status === 500) {
             alert(error.response.data.message);
           }
         }
